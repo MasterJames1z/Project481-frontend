@@ -18,13 +18,24 @@
         class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
         id="navbar-search"
       >
-        <div>
+        <!-- <div>
           <select
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           >
             <option value="TItle">Titel</option>
             <option value="Description">Description</option>
           </select>
+        </div> -->
+        <div class="relative p-2 inline-block">
+          <div class="text-blue-600 md:text-white font-sans">Search By</div>
+          <input type="radio" id="one" value="Title" v-model="SearchBy" />
+          <label class="text-blue-600 md:text-white font-sans mr-2" for="one"
+            >Title</label
+          >
+          <input type="radio" id="two" value="Description" v-model="SearchBy" />
+          <label class="text-blue-600 md:text-white font-sans" for="two"
+            >Description</label
+          >
         </div>
         <div class="relative hidden md:block">
           <Form
@@ -126,6 +137,7 @@
 import AuthService from "@/services/AuthService.js";
 import AnimeService from "@/services/AnimeService.js";
 import * as yup from "yup";
+import { ref } from "vue";
 import { Field, Form } from "vee-validate";
 export default {
   name: "navbar-component",
@@ -152,24 +164,28 @@ export default {
       AuthService.logout();
       this.$router.push("/login");
     },
-    // onSearch(input) {
-    //   console.log(input);
-    //   AnimeService.getAnimeTitle(input);
-    //   this.$router.push("/anime");
-    // },
-    onSearch(query) {
-      if (
-        this.choose.name == "Selected search" ||
-        this.choose.name == "Title"
-      ) {
-        AnimeService.getAnimeTitle(query);
-        console.log("searchbytitle");
-        setTimeout(() => this.$router.push("anime"), 200);
-      } else {
-        AnimeService.getAnimeDescription(query);
-        setTimeout(() => this.$router.push("anime"), 200);
-      }
+    onSearch(input) {
+      console.log(input);
+      AnimeService.getAnimeTitle(input);
+      this.$router.push("/anime");
     },
+    // onSearch(query) {
+    //   if (
+    //     this.choose.name == "Selected search" ||
+    //     this.choose.name == "Title"
+    //   ) {
+    //     AnimeService.getAnimeTitle(query);
+    //     console.log("searchbytitle");
+    //     setTimeout(() => this.$router.push("anime"), 200);
+    //   } else {
+    //     AnimeService.getAnimeDescription(query);
+    //     setTimeout(() => this.$router.push("anime"), 200);
+    //   }
+    // },
+  },
+  setup() {
+    const SearchBy = ref("");
+    return { SearchBy };
   },
 };
 </script>
