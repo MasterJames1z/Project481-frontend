@@ -1,6 +1,6 @@
 <template>
   <!-- component -->
-  <div class="bg-blue-400 h-screen w-screen">
+  <div class="bg-indigo-400 h-screen w-screen">
     <div
       class="flex flex-col items-center flex-1 h-full justify-center px-4 sm:px-0"
     >
@@ -69,7 +69,7 @@
         <div
           class="hidden md:block md:w-1/2 rounded-r-lg"
           style="
-            background: url('https://images.unsplash.com/photo-1515965885361-f1e0095517ea?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=3300&q=80');
+            background: url('https://images2.fanpop.com/images/photos/6000000/Code-Geass-code-geass-6006914-1243-1451.jpg');
             background-size: cover;
             background-position: center center;
           "
