@@ -1,7 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
-import AnimeListView from "../views/AnimeListView.vue";
+import EventCardView from "../views/EventCardView.vue";
+import AnimeDetail from "../views/AnimeDetail.vue";
+import GStore from "@/store";
 
 const routes = [
   {
@@ -24,9 +26,22 @@ const routes = [
     component: LoginView,
   },
   {
-    path: "/anime",
-    name: "anime",
-    component: AnimeListView,
+    path: "/event",
+    name: "event",
+    component: EventCardView,
+  },
+  {
+    path: "/detail/:id",
+    name: "detail",
+    props: true,
+    component: AnimeDetail,
+    beforeEnter: (to) => {
+      console.log(to.params.id);
+      GStore.detail = GStore.animeList.filter(
+        (itemInArray) => itemInArray.mal_id == to.params.id
+      );
+      console.log(GStore.detail);
+    },
   },
 ];
 

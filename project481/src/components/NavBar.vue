@@ -26,23 +26,38 @@
             <option value="Description">Description</option>
           </select>
         </div> -->
-        <div class="relative p-2 inline-block">
-          <div class="text-blue-600 md:text-white font-sans">Search By</div>
-          <input type="radio" id="one" value="Title" v-model="SearchBy" />
-          <label class="text-blue-600 md:text-white font-sans mr-2" for="one"
-            >Title</label
-          >
-          <input type="radio" id="two" value="Description" v-model="SearchBy" />
-          <label class="text-blue-600 md:text-white font-sans" for="two"
-            >Description</label
-          >
-        </div>
+
         <div class="relative hidden md:block">
           <Form
             @submit="onSearch"
             :validation-schema="schema"
             class="flex items-center"
           >
+            <div class="relative p-2 inline-block">
+              <div class="text-blue-600 md:text-white font-sans">Search By</div>
+              <Field
+                type="radio"
+                name="qoption"
+                id="one"
+                value="title"
+                v-model="SearchBy"
+              />
+              <label
+                class="text-blue-600 md:text-white font-sans mr-2"
+                for="one"
+                >Title</label
+              >
+              <Field
+                type="radio"
+                name="qoption"
+                id="two"
+                value="description"
+                v-model="SearchBy"
+              />
+              <label class="text-blue-600 md:text-white font-sans" for="two"
+                >Description</label
+              >
+            </div>
             <div class="relative w-full">
               <div
                 class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
@@ -136,6 +151,7 @@
 <script>
 import AuthService from "@/services/AuthService.js";
 import AnimeService from "@/services/AnimeService.js";
+import SpellService from "@/services/SpellService.js";
 import * as yup from "yup";
 import { ref } from "vue";
 import { Field, Form } from "vee-validate";
@@ -151,11 +167,11 @@ export default {
       // loading: false,
       // message: "Syetem cannot loading",
       schema,
-      select: null,
-      choice: [{ name: "Title" }, { name: "Description" }],
-      choose: {
-        name: "Select search",
-      },
+      // select: null,
+      // choice: [{ name: "Title" }, { name: "Description" }],
+      // choose: {
+      //   name: "Select search",
+      // },
     };
   },
 
@@ -164,24 +180,35 @@ export default {
       AuthService.logout();
       this.$router.push("/login");
     },
-    onSearch(input) {
-      console.log(input);
-      AnimeService.getAnimeTitle(input);
-      this.$router.push("/anime");
-    },
     // onSearch(query) {
-    //   if (
-    //     this.choose.name == "Selected search" ||
-    //     this.choose.name == "Title"
-    //   ) {
-    //     AnimeService.getAnimeTitle(query);
-    //     console.log("searchbytitle");
-    //     setTimeout(() => this.$router.push("anime"), 200);
-    //   } else {
-    //     AnimeService.getAnimeDescription(query);
-    //     setTimeout(() => this.$router.push("anime"), 200);
-    //   }
+    //   console.log(query);
+    //   AnimeService.getAnimeTitle(query);
+    //   this.$router.push("/anime");
     // },
+    onSearch(query) {
+      SpellService.correction(query["query"])
+        .then((res) => {
+          if (query["query"] != res.data) {
+            alert("May be you mean: " + res.data);
+            console.log();
+            if (query["qoption"] === "title") {
+              AnimeService.getAnimeTitle(query);
+            } else if (query["qoption"] === "description") {
+              AnimeService.getAnimeDescription(query);
+            }
+          } else {
+            if (query["qoption"] === "title") {
+              AnimeService.getAnimeTitle(query);
+            } else if (query["qoption"] === "description") {
+              AnimeService.getAnimeDescription(query);
+            }
+          }
+        })
+        .catch(() => {
+          alert("Something went wrong!");
+        });
+      this.$router.push("event");
+    },
   },
   setup() {
     const SearchBy = ref("");
